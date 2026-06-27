@@ -13,12 +13,6 @@
 # In this specific file, we pass 'uploaded_file.name' to Ollama.
 # We assume that the image you upload ALREADY exists in the same folder as this script.
 # Since the file is on the disk, Ollama can find it using just the filename.
-#
-# Installation:
-# pip install streamlit ollama
-#
-# How to run:
-# streamlit run 9.py
 
 from PIL import Image
 import json
