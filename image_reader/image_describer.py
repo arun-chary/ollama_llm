@@ -20,6 +20,7 @@
 # How to run:
 # streamlit run 9.py
 
+from PIL import Image
 import json
 import re
 import tempfile  # For creating temporary files
@@ -168,23 +169,6 @@ if clear_button:
 # Print the list of uploaded file objects to the terminal for debugging.
 print(uploaded_files)
 
-# Check if the user has uploaded at least one file.
-# if len(uploaded_files) != 0:
-#     # Loop through each uploaded file.
-#     for uploaded_file in uploaded_files:
-#         # Debug prints
-#         print(uploaded_file.name)
-#         print(type(uploaded_file.name))
-
-#         # Display the image on the webpage.
-#         st.image(uploaded_file, caption='Uploaded Image.', width=True)
-
-#         # Send the image to Llava for description.
-#         # CRITICAL NOTE: 'uploaded_file.name' gives us the filename (e.g., "image.jpg").
-#         # Because we are uploading a file that is ALREADY in our project folder,
-#         # Ollama can find it by name. If you uploaded a file from a different folder,
-#         # this would fail because Ollama wouldn't know the full path.
-
 if uploaded_files and submit_button:
     st.write(f"Uploaded {len(uploaded_files)} image(s)")
 
@@ -197,11 +181,18 @@ if uploaded_files and submit_button:
 
         suffix = Path(uploaded_file.name).suffix or ".jpg"
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-            tmp.write(uploaded_file.getvalue())
-            temp_path = tmp.name
-
+        temp_path = None
         try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+                tmp.write(uploaded_file.getvalue())
+                temp_path = tmp.name
+
+            try:
+                Image.open(temp_path).verify()
+            except Exception:
+                st.error("Uploaded file is not a valid image or is corrupted.")
+                continue
+
             models_to_try = [model_choice]
 
             last_error = None
@@ -249,3 +240,9 @@ if uploaded_files and submit_button:
                 ) from last_error
         except Exception as e:
             st.error(f"Could not describe the image: {e}")
+        finally:
+            if temp_path and os.path.exists(temp_path):
+                try:
+                    os.remove(temp_path)
+                except Exception:
+                    pass

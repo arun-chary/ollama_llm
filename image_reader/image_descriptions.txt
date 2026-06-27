@@ -74,3 +74,21 @@ Tags: ```json
 ```
 Confidence: medium
 ----------------------------------------
+File: elephant.jpg
+Prompt type: Describe
+Model used: llava:latest
+Prompt: Describe this image in one short paragraph.
+Description:
+ The image is a serene nature scene featuring an elephant standing on the riverbank with a backdrop of lush foliage and mist, creating an ethereal atmosphere. 
+Tags: elephant, riverbank, lush foliage, mist, ethereal
+Confidence: high
+----------------------------------------
+File: elephant.jpg
+Prompt type: Describe
+Model used: llava:7b
+Prompt: Describe this image in one short paragraph.
+Description:
+ The image depicts a tranquil scene of an elephant standing still in a shallow river, surrounded by lush green foliage under a sunlight filtering through the canopy. 
+Tags: elephant, river, foliage, canopy, sunlight
+Confidence: high
+----------------------------------------
