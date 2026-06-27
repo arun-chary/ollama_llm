@@ -24,3 +24,12 @@ Prompt: Describe this image in one short paragraph.
 Description:
  In the tranquil setting of a river, two people are enjoying a ride in a traditional wooden canoe. They seem to be having a conversation while appreciating the serene surroundings. The man is holding an oar, ready to navigate through the calm waters that also reflect a few pink flowers on its surface. Their attire suggests a cultural or festive occasion, adding to the overall charm of this picturesque scene. 
 ----------------------------------------
+File: joshwiiieee-canoe-10337336_1920.jpg
+Prompt type: Describe
+Model used: llava
+Prompt: Describe this image in one short paragraph.
+Description:
+ This is a vibrant and colorful image capturing a moment of leisure on a lake, featuring a couple aboard a traditional longboat with pink lilypads floating near it. The boat is adorned with decorative elements, including an intricate pattern of red, white, and black hues that might represent a local culture or theme. One person appears to be holding a guitar, suggesting they are enjoying music during their time on the water. The individuals aboard the boat seem to be posing for the photo, creating a lively atmosphere. In the background, there's another smaller boat visible near the shoreline where a few more decorations can be spotted. The overall scene conveys a sense of joy and relaxation in a picturesque setting. 
+Tags: lake, boat, longboat, pink lilypads, traditional
+Confidence: high
+----------------------------------------

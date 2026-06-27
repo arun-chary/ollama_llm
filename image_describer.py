@@ -20,11 +20,42 @@
 # How to run:
 # streamlit run 9.py
 
+import json
 import tempfile  # For creating temporary files
 from pathlib import Path  # For handling file paths
 import ollama  # For AI interaction
 import streamlit as st  # For Web UI
 import os  # Standard library for OS interactions
+
+
+def extract_tags_and_confidence(description, model_name):
+    """Use the selected model to extract short tags and a confidence label."""
+    extraction_prompt = (
+        "From the following image description, extract 5 short keywords or object names "
+        "that best describe the image. Return a JSON object with exactly two keys: "
+        "'tags' (a list of short strings) and 'confidence' (one of 'high', 'medium', or 'low')."
+        f"\nDescription: {description}"
+    )
+
+    try:
+        response = ollama.chat(
+            model=model_name,
+            messages=[{"role": "user", "content": extraction_prompt}],
+        )
+        content = response["message"]["content"].strip()
+
+        try:
+            data = json.loads(content)
+            tags = data.get("tags", [])
+            confidence = str(data.get("confidence", "medium")).lower()
+        except Exception:
+            tags = [item.strip() for item in content.split(",") if item.strip()]
+            confidence = "medium"
+    except Exception:
+        tags = []
+        confidence = "medium"
+
+    return tags[:5], confidence
 
 
 st.title("Image Describer!")
@@ -116,6 +147,11 @@ if uploaded_files:
                     st.markdown(description)
                     st.caption(f"Model used: {model_name}")
 
+                    tags, confidence = extract_tags_and_confidence(description, model_name)
+                    st.subheader("Tags")
+                    st.write(", ".join(tags) if tags else "No tags extracted")
+                    st.caption(f"Confidence: {confidence.upper()}")
+
                     with output_path.open("a", encoding="utf-8") as fh:
                         fh.write(f"File: {uploaded_file.name}\n")
                         fh.write(f"Prompt type: {prompt_type}\n")
@@ -123,6 +159,8 @@ if uploaded_files:
                         fh.write(f"Prompt: {question}\n")
                         fh.write("Description:\n")
                         fh.write(f"{description}\n")
+                        fh.write("Tags: " + (", ".join(tags) if tags else "No tags extracted") + "\n")
+                        fh.write(f"Confidence: {confidence}\n")
                         fh.write("-" * 40 + "\n")
 
                     st.caption(f"Saved to {output_path}")
