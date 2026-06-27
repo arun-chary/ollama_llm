@@ -58,7 +58,28 @@ def extract_tags_and_confidence(description, model_name):
     return tags[:5], confidence
 
 
+st.set_page_config(page_title="Image Describer", page_icon="🖼️", layout="wide")
 st.title("Image Describer!")
+
+st.sidebar.header("Controls")
+st.info("Upload one or more images, choose your settings, and click Start analysis.")
+
+if theme_choice := st.sidebar.selectbox(
+    "Theme",
+    ["Default", "Dark", "Light"],
+    index=0,
+    key="theme_choice",
+):
+    if theme_choice == "Dark":
+        st.markdown(
+            "<style>body{background-color:#0e1117;color:white;} .stApp{background-color:#0e1117;} .stMarkdown, .stTextInput, .stSelectbox, .stSlider, .stButton>button{color:white;}</style>",
+            unsafe_allow_html=True,
+        )
+    elif theme_choice == "Light":
+        st.markdown(
+            "<style>body{background-color:white;color:#111;} .stApp{background-color:white;} .stMarkdown, .stTextInput, .stSelectbox, .stSlider, .stButton>button{color:#111;}</style>",
+            unsafe_allow_html=True,
+        )
 
 # Create a file uploader widget.
 # accept_multiple_files=True allows the user to select more than one image at a time.
@@ -67,20 +88,28 @@ st.title("Image Describer!")
 uploaded_files = st.file_uploader(
     "Choose an image",
     accept_multiple_files=True,
-    type=["jpg", "jpeg", "png"]
+    type=["jpg", "jpeg", "png"],
+    key="uploaded_files",
 )
 
-prompt_type = st.selectbox(
+prompt_type = st.sidebar.selectbox(
     "Prompt type",
     ["Describe", "Short caption", "List objects", "Analyze mood"],
     index=0,
+    key="prompt_type",
 )
 
-model_choice = st.selectbox(
+model_choice = st.sidebar.selectbox(
     "Model to use",
     ["llava:7b", "llava", "llava:latest"],
     index=2,
+    key="model_choice",
 )
+
+max_items = st.sidebar.slider("Max images to process at once", 1, 5, 3, key="max_items")
+
+submit_button = st.sidebar.button("Start analysis", key="submit_button")
+clear_button = st.sidebar.button("Clear all", key="clear_button")
 
 prompt_templates = {
     "Describe": "Describe this image in one short paragraph.",
@@ -90,6 +119,15 @@ prompt_templates = {
 }
 
 question = prompt_templates[prompt_type]
+
+if clear_button:
+    st.session_state.pop("prompt_type", None)
+    st.session_state.pop("model_choice", None)
+    st.session_state.pop("theme_choice", None)
+    st.session_state.pop("max_items", None)
+    st.session_state.pop("submit_button", None)
+    st.session_state.pop("clear_button", None)
+    st.rerun()
 
 # Print the list of uploaded file objects to the terminal for debugging.
 print(uploaded_files)
@@ -111,13 +149,13 @@ print(uploaded_files)
 #         # Ollama can find it by name. If you uploaded a file from a different folder,
 #         # this would fail because Ollama wouldn't know the full path.
 
-if uploaded_files:
+if uploaded_files and submit_button:
     st.write(f"Uploaded {len(uploaded_files)} image(s)")
 
     output_path = Path(__file__).resolve().parent / "image_descriptions.txt"
     output_path.parent.mkdir(exist_ok=True)
 
-    for uploaded_file in uploaded_files:
+    for uploaded_file in uploaded_files[:max_items]:
         st.subheader(uploaded_file.name)
         st.image(uploaded_file, caption="Uploaded Image", width=600)
 

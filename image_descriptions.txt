@@ -33,3 +33,31 @@ Description:
 Tags: lake, boat, longboat, pink lilypads, traditional
 Confidence: high
 ----------------------------------------
+File: joshwiiieee-canoe-10337336_1920.jpg
+Prompt type: List objects
+Model used: llava:7b
+Prompt: List the main objects visible in this image.
+Description:
+ The main objects visible in the image are:
+
+1. Two people in traditional indigenous clothing, one of whom is holding a bow and arrow.
+2. A long boat or canoe with a decorated stern.
+3. Water lilies floating on the water surface.
+4. A body of water which could be a lake or river.
+5. A backdrop of the land and trees beyond the water. 
+Tags: ```json
+{
+  "tags": ["people", "traditional clothing", "bow and arrow", "boat", "water lilies"
+Confidence: medium
+----------------------------------------
+File: joshwiiieee-canoe-10337336_1920.jpg
+Prompt type: List objects
+Model used: llava:latest
+Prompt: List the main objects visible in this image.
+Description:
+ The image shows a man and a woman in a traditional longboat, with a backdrop of pink lily pads on water. They are wearing colorful traditional garments. 
+Tags: ```json
+{
+    "tags": ["man", "woman", "longboat", "pink lilies", "traditional"]
+Confidence: medium
+----------------------------------------
