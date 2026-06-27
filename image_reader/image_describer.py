@@ -21,11 +21,52 @@
 # streamlit run 9.py
 
 import json
+import re
 import tempfile  # For creating temporary files
 from pathlib import Path  # For handling file paths
 import ollama  # For AI interaction
 import streamlit as st  # For Web UI
 import os  # Standard library for OS interactions
+
+
+def parse_extraction_output(content):
+    """Try to parse the model output as JSON or structured text."""
+    content = content.strip()
+
+    # Try direct JSON parse first.
+    try:
+        data = json.loads(content)
+        return data
+    except Exception:
+        pass
+
+    # Try to extract a JSON object from inside noisy text.
+    match = re.search(r"\{.*\}", content, re.S)
+    if match:
+        try:
+            data = json.loads(match.group(0))
+            return data
+        except Exception:
+            pass
+
+    # Fallback: look for a confidence word and comma-separated tags.
+    confidence = "medium"
+    if re.search(r"\bhigh\b", content, re.I):
+        confidence = "high"
+    elif re.search(r"\blow\b", content, re.I):
+        confidence = "low"
+
+    tags = []
+    if "tags" in content.lower():
+        tag_match = re.search(r"tags\s*[:=]\s*\[([^\]]+)\]", content, re.I)
+        if tag_match:
+            tags = [t.strip().strip('"\'') for t in tag_match.group(1).split(",") if t.strip()]
+    if not tags:
+        # Take the first comma-separated line as tags
+        first_line = content.splitlines()[0]
+        tags = [item.strip() for item in first_line.split(",") if item.strip()]
+
+    return {"tags": tags, "confidence": confidence}
 
 
 def extract_tags_and_confidence(description, model_name):
@@ -43,14 +84,9 @@ def extract_tags_and_confidence(description, model_name):
             messages=[{"role": "user", "content": extraction_prompt}],
         )
         content = response["message"]["content"].strip()
-
-        try:
-            data = json.loads(content)
-            tags = data.get("tags", [])
-            confidence = str(data.get("confidence", "medium")).lower()
-        except Exception:
-            tags = [item.strip() for item in content.split(",") if item.strip()]
-            confidence = "medium"
+        data = parse_extraction_output(content)
+        tags = data.get("tags", []) if isinstance(data, dict) else []
+        confidence = str(data.get("confidence", "medium")).lower() if isinstance(data, dict) else "medium"
     except Exception:
         tags = []
         confidence = "medium"

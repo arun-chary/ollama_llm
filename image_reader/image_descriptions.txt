@@ -61,3 +61,16 @@ Tags: ```json
     "tags": ["man", "woman", "longboat", "pink lilies", "traditional"]
 Confidence: medium
 ----------------------------------------
+File: joshwiiieee-canoe-10337336_1920.jpg
+Prompt type: Describe
+Model used: llava:latest
+Prompt: Describe this image in one short paragraph.
+Description:
+ The image is a photograph featuring two individuals, a man and a woman, seated on the edge of a long wooden canoe on what appears to be a body of water. Both are dressed in cultural attire; the man wears a patterned shirt with a hat, while the woman has a flower on her hair and wears a dress adorned with the same pattern. The man holds a guitar, suggesting they might be musicians or performers. In the background, pink flowers float gently on the water's surface. There is no visible text in the image. 
+Tags: ```json
+{
+  "tags": ["people", "canoe", "music", "cultural attire"], "confidence": "high"
+}
+```
+Confidence: medium
+----------------------------------------
