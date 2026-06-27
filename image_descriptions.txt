@@ -1,0 +1,26 @@
+File: My photo 375 x 480.jpg
+Prompt type: List objects
+Prompt: List the main objects visible in this image.
+Description:
+ In the image provided, there are several main objects:
+
+1. A person posing for the photo.
+2. The person is wearing glasses and a blue shirt.
+3. Behind the person, there's a plain white background that contrasts with their attire.
+4. The individual is smiling and looking directly at the camera.
+5. There are no other significant objects or text visible in this image. 
+----------------------------------------
+File: joshwiiieee-canoe-10337336_1920.jpg
+Prompt type: Describe
+Model used: llava:7b
+Prompt: Describe this image in one short paragraph.
+Description:
+ In the tranquil setting of a lily pad-covered lake, two individuals are on a small boat. The person in the foreground is holding up their hand as if in a gesture of greeting or blessing. The other individual, seated across from them, is engaged with an object held securely on the edge of the boat. Both individuals appear to be enjoying a peaceful day out on the water. 
+----------------------------------------
+File: joshwiiieee-canoe-10337336_1920.jpg
+Prompt type: Describe
+Model used: llava:latest
+Prompt: Describe this image in one short paragraph.
+Description:
+ In the tranquil setting of a river, two people are enjoying a ride in a traditional wooden canoe. They seem to be having a conversation while appreciating the serene surroundings. The man is holding an oar, ready to navigate through the calm waters that also reflect a few pink flowers on its surface. Their attire suggests a cultural or festive occasion, adding to the overall charm of this picturesque scene. 
+----------------------------------------

@@ -45,6 +45,12 @@ prompt_type = st.selectbox(
     index=0,
 )
 
+model_choice = st.selectbox(
+    "Model to use",
+    ["llava:7b", "llava", "llava:latest"],
+    index=2,
+)
+
 prompt_templates = {
     "Describe": "Describe this image in one short paragraph.",
     "Short caption": "Write a short caption for this image.",
@@ -77,6 +83,9 @@ print(uploaded_files)
 if uploaded_files:
     st.write(f"Uploaded {len(uploaded_files)} image(s)")
 
+    output_path = Path(__file__).resolve().parent / "image_descriptions.txt"
+    output_path.parent.mkdir(exist_ok=True)
+
     for uploaded_file in uploaded_files:
         st.subheader(uploaded_file.name)
         st.image(uploaded_file, caption="Uploaded Image", width=600)
@@ -88,7 +97,7 @@ if uploaded_files:
             temp_path = tmp.name
 
         try:
-            models_to_try = ["llava:7b", "llava", "llava:latest"]
+            models_to_try = [model_choice]
 
             last_error = None
             for model_name in models_to_try:
@@ -103,7 +112,20 @@ if uploaded_files:
                             }
                         ]
                     )
-                    st.markdown(response["message"]["content"])
+                    description = response["message"]["content"]
+                    st.markdown(description)
+                    st.caption(f"Model used: {model_name}")
+
+                    with output_path.open("a", encoding="utf-8") as fh:
+                        fh.write(f"File: {uploaded_file.name}\n")
+                        fh.write(f"Prompt type: {prompt_type}\n")
+                        fh.write(f"Model used: {model_name}\n")
+                        fh.write(f"Prompt: {question}\n")
+                        fh.write("Description:\n")
+                        fh.write(f"{description}\n")
+                        fh.write("-" * 40 + "\n")
+
+                    st.caption(f"Saved to {output_path}")
                     break
                 except Exception as exc:
                     last_error = exc
@@ -111,9 +133,7 @@ if uploaded_files:
                         raise
             else:
                 raise RuntimeError(
-                    "No compatible Ollama image model was found. Tried "
-                    + ", ".join(models_to_try)
-                    + ". Run 'ollama pull llava' or 'ollama pull llava:latest' first."
+                    f"The selected model '{model_choice}' could not be used. Make sure it is installed with 'ollama pull {model_choice}'."
                 ) from last_error
         except Exception as e:
             st.error(f"Could not describe the image: {e}")
