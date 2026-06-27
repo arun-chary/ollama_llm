@@ -39,10 +39,20 @@ uploaded_files = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-question = st.text_input(
-    "Ask a question about the uploaded image(s)",
-    "Describe this image in one short paragraph."
+prompt_type = st.selectbox(
+    "Prompt type",
+    ["Describe", "Short caption", "List objects", "Analyze mood"],
+    index=0,
 )
+
+prompt_templates = {
+    "Describe": "Describe this image in one short paragraph.",
+    "Short caption": "Write a short caption for this image.",
+    "List objects": "List the main objects visible in this image.",
+    "Analyze mood": "Describe the mood and atmosphere of this image.",
+}
+
+question = prompt_templates[prompt_type]
 
 # Print the list of uploaded file objects to the terminal for debugging.
 print(uploaded_files)
